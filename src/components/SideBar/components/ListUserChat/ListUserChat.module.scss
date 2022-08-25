@@ -1,0 +1,63 @@
+$hw-online-checker: 20px;
+$unseen-color: #cccccc;
+$seen-color: #ffffff;
+$hw-icon-wrapper: 16px;
+
+.user-name {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.latest-message {
+  color: #7f7f7f;
+  font-size: 14px;
+}
+
+.wrapper {
+  position: relative;
+  #icon-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 240px;
+    transform: translateY(-50%);
+    width: $hw-icon-wrapper;
+    height: $hw-icon-wrapper;
+    border-radius: 50%;
+    border: 2px solid $unseen-color;
+    text-align: center;
+    line-height: 12px;
+    font-size: 8px;
+  }
+}
+
+.seen {
+  background-color: $unseen-color;
+  color: $seen-color;
+}
+
+.un-seen {
+  background-color: transparent;
+  color: $unseen-color;
+}
+
+.avatar-wrapper {
+  position: relative;
+  .online-checker {
+    position: absolute;
+    width: $hw-online-checker;
+    height: $hw-online-checker;
+    border-radius: 50%;
+    background-color: #3bca4e;
+    border: 3px solid #fff;
+    bottom: 4px;
+    right: 0%;
+  }
+}
+
+#room-chat-wrapper {
+  padding: 7px 34px 7px 7px;
+  border: 1px solid transparent;
+  * {
+    cursor: pointer;
+  }
+}

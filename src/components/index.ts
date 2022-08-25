@@ -1,3 +1,5 @@
-import Header from "./Header";
+import SideBar from "./SideBar";
+import Protected from "./Protected";
 
-export { Header }
+export { SideBar, Protected }
+

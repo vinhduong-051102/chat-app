@@ -1,0 +1,20 @@
+$hw-online-checker: 20px;
+
+.user-name {
+  max-width: 100%;
+  
+}
+
+.avatar-wrapper {
+  position: relative;
+  .online-checker {
+    position: absolute;
+    width: $hw-online-checker;
+    height: $hw-online-checker;
+    border-radius: 50%;
+    background-color: #3BCA4E;
+    border: 3px solid #fff;
+    bottom: 4px;
+    right: 0%;
+  }
+}

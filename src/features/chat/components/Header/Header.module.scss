@@ -1,0 +1,25 @@
+
+
+.header-icon {
+  font-size: 16px;
+  border-radius: 50%;
+  color: #2273FC;
+  padding: 6px 10px;
+  * {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.header-icon:hover {
+  background-color: rgba(231, 230, 230, 0.845);
+} 
+
+.header-icon:active {
+  background-color: #ccc;
+}
+
+.icon-wrapper:last-child {
+  margin-right: 10px;
+}
+
