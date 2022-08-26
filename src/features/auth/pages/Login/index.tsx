@@ -1,62 +1,40 @@
-import { FacebookOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import { User } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { useSignInWithFacebook } from "react-firebase-hooks/auth";
+import { Button, Col, Row, Typography } from "antd";
+import { useEffect } from "react";
+import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "~/features/auth/authSlice";
-import { auth, db } from "~/firebase/config";
+import { auth } from "~/firebase/config";
+
+const { Title } = Typography;
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [signInWithFacebook, _user, _loading, _error] = useSignInWithFacebook(auth);
-  const setUserInDB = async (user: User | null) => {
-    try {
-      if (user) {
-        await setDoc(
-          doc(db, "users", user.uid as string),
-          {
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            loginAt: Date.now(),
-            isLogin: true,
-            uid: user.uid,
-          },
-          { merge: true }
-        );
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.log(error);
+  const [signInWithGoogle, user, _loading, _error] = useSignInWithGoogle(auth);
+  useEffect(() => {
+    if (user) {
+      dispatch(login(user));
+      navigate("/");
     }
-  };
-  
-  const Auth = auth;
+  }, [user, dispatch, navigate]);
   const handleLogin = () => {
-    signInWithFacebook()
-      .then(() => {
-        Auth.onAuthStateChanged((user) => {
-          setUserInDB(user);
-          
-          dispatch(login(user));
-        });
-        navigate("/");
-      })
-      .catch((error) => {
-        throw Error(error);
-      });
+    signInWithGoogle();
   };
 
   return (
     <div>
-      <Button onClick={handleLogin}>
-        Đăng nhập bằng Facebook
-        <FacebookOutlined />
-      </Button>
+      <Row justify='center' style={{ height: 800 }}>
+        <Col span={8}>
+          <Title style={{ textAlign: "center" }} level={3}>
+            Chat App
+          </Title>
+          <Button style={{ width: "100%", marginBottom: 5 }} onClick={handleLogin}>
+            Đăng nhập bằng Google
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }

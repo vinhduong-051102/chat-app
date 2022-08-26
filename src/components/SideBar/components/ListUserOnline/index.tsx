@@ -1,7 +1,5 @@
 import { Avatar, Col, Row, Space } from "antd";
 import classNames from "classnames/bind";
-import { useSelector } from "react-redux";
-import { selectUserCredential } from "~/features/auth/authSlice";
 import { dotdotdot } from "~/helper";
 import styles from "./ListUserOnline.module.scss";
 
@@ -20,20 +18,14 @@ interface propsTypes {
 }
 
 const ListUserOnline: React.FC<propsTypes> = ({ data }) => {
-  const userInfo: any = useSelector(selectUserCredential);
-  let photoURL = "";
-  if (userInfo) {
-    photoURL = userInfo.photoURL;
-  }
-
   return (
     <Row style={{ overflowX: "scroll" }}>
       <Space size={20}>
-        {data.map((item, index) => {
+        {data.map((item) => {
           return (
-            <Col key={index} style={{ maxWidth: 50}}>
+            <Col key={item.uid} style={{ maxWidth: 50}}>
               <div className={cx("avatar-wrapper")}>
-                <Avatar size={50} src={item.photoURL} style={{ marginBottom: 5 }} />
+                <Avatar size={50} src={item.photoURL} style={{ marginBottom: 5 }} alt="avatar" />
                 {item.isLogin && <span className={cx("online-checker")}></span>}
               </div>
               <p

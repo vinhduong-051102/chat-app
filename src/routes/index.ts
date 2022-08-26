@@ -16,6 +16,12 @@ export const publicRoute: routeTypes[] = [
     layout: null
 
   },
+  {
+    path: "/*",
+    component: Login,
+    layout: null
+
+  },
   
 ]
 export const privateRoute: routeTypes[] = [

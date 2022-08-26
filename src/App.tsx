@@ -1,26 +1,46 @@
-import { Fragment } from "react";
-import { useDispatch } from "react-redux";
+import { collection, onSnapshot } from "firebase/firestore";
+import { Fragment, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { Protected } from "~/components";
+import { logout, selectIsLogin } from "~/features/auth/authSlice";
+import { db } from "~/firebase/config";
 import { MainLayout } from "~/layouts";
 import { privateRoute, publicRoute } from "~/routes";
-import { useEffect } from "react";
-import { logout } from "~/features/auth/authSlice";
+import { setListUser } from "./app/rootReducer";
+
+interface userTypes {
+  displayName: string;
+  isLogin: boolean;
+  loginAt: number;
+  photoURL: string;
+  uid: string;
+}
 
 function App() {
   const dispatch = useDispatch();
-
+  const _isLogin = useSelector(selectIsLogin);
+  useEffect(() => {
+    if (_isLogin) {
+      onSnapshot(collection(db, "users"), (data) => {
+        const { docs } = data;
+        const listUser: userTypes[] = [];
+        docs.forEach((doc) => {
+          const { isLogin, loginAt, photoURL, displayName, uid } = doc.data();
+          listUser.push({ isLogin, loginAt, photoURL, displayName, uid });
+        });
+        dispatch(setListUser(listUser));
+      });
+    }
+  }, [_isLogin, dispatch]);
   useEffect(() => {
     const handleBeforeUpload = () => {
       dispatch(logout());
     };
     window.addEventListener("unload", handleBeforeUpload);
     window.addEventListener("beforeunload", handleBeforeUpload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUpload);
-      window.removeEventListener("unload", handleBeforeUpload);
-    };
   }, [dispatch]);
+
   return (
     <div className='App'>
       <Routes>

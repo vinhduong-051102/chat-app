@@ -6,7 +6,6 @@ import Input from "antd/lib/input/Input";
 import classNames from "classnames/bind";
 import { ListUserChat, ListUserOnline } from "./components";
 import styles from "./SideBar.module.scss";
-import { auth } from "~/firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "~/features/auth/authSlice";
 import { selectListUserOnline } from "~/app/rootReducer";
@@ -19,7 +18,6 @@ function SideBar() {
   const listUserOnline = useSelector(selectListUserOnline)
   const dispatch = useDispatch()
   const handleLogout = () => {
-    auth.signOut()
     dispatch(logout())
   }
   return (

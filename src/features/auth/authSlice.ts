@@ -4,12 +4,12 @@ import { UserCredential } from 'firebase/auth'
 
 
 interface initialStateTypes {
-  UserCredential: UserCredential | object;
+  UserCredential: UserCredential | undefined;
   isLogin: boolean;
 }
 
 const initialState: initialStateTypes = {
-  UserCredential: {},
+  UserCredential: undefined,
   isLogin: false,
 };
 
