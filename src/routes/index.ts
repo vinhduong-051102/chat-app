@@ -26,8 +26,8 @@ export const publicRoute: routeTypes[] = [
 ]
 export const privateRoute: routeTypes[] = [
   {
-    path: "/",
-    component: Chat,
+    path: "chat-room/*",
+    component: Chat
   }
   
 ]

@@ -64,7 +64,8 @@
     ]
   },
   "devDependencies": {
+    "@types/uuid": "^8.3.4",
     "babel-plugin-module-resolver": "^4.1.0"
-  }, 
+  },
   "homepage": "http://vinhduong-051102.github.io/chat-app/"
 }

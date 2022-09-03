@@ -2,6 +2,7 @@ import { Avatar, Col, Row, Space } from "antd";
 import classNames from "classnames/bind";
 import { dotdotdot } from "~/helper";
 import styles from "./ListUserOnline.module.scss";
+import { Link } from "react-router-dom"
 
 const cx = classNames.bind(styles);
 
@@ -24,16 +25,18 @@ const ListUserOnline: React.FC<propsTypes> = ({ data }) => {
         {data.map((item) => {
           return (
             <Col key={item.uid} style={{ maxWidth: 50}}>
-              <div className={cx("avatar-wrapper")}>
-                <Avatar size={50} src={item.photoURL} style={{ marginBottom: 5 }} alt="avatar" />
-                {item.isLogin && <span className={cx("online-checker")}></span>}
-              </div>
-              <p
-                style={{ fontSize: "12px", fontWeight: 420, textAlign: "center", marginBottom: 10 }}
-                className={cx("user-name")}
-              >
-                {dotdotdot(item.displayName, 10)}
-              </p>
+              <Link to={`/chat-room/${item.uid}`}>
+                <div className={cx("avatar-wrapper")}>
+                  <Avatar size={50} src={item.photoURL} style={{ marginBottom: 5 }} alt="avatar" />
+                  {item.isLogin && <span className={cx("online-checker")}></span>}
+                </div>
+                <p
+                  style={{ fontSize: "12px", fontWeight: 420, textAlign: "center", marginBottom: 10 }}
+                  className={cx("user-name")}
+                >
+                  {dotdotdot(item.displayName, 10)}
+                </p>
+              </Link>
             </Col>
           );
         })}

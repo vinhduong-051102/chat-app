@@ -30,7 +30,7 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const selectUserCredential = (state: RootState) => state.LoginReducer.UserCredential;
-export const selectIsLogin = (state: RootState) => state.LoginReducer.isLogin
+export const selectUserCredential = (state: RootState) => state.authReducer.UserCredential;
+export const selectIsLogin = (state: RootState) => state.authReducer.isLogin
 
 export const { login, logout } = authSlice.actions;

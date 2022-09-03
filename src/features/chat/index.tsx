@@ -1,20 +1,16 @@
-import { Col, Row } from "antd";
-import { ChatRoom, Header, Footer } from "./components";
-
+import { Routes, Route } from "react-router-dom";
+import { selectListUser } from "~/app/rootReducer";
+import { useSelector } from "react-redux";
+import { ChatUI } from "./components";
 
 function Chat() {
+  const listUser = useSelector(selectListUser);
   return (
-    <Row>
-      <Col span={24} style={{ height: "65px" }}>
-        <Header />
-      </Col>
-      <Col span={24} className='chatRoom'>
-        <ChatRoom />
-      </Col>
-      <Col span={24} style={{ height: "50px" }}>
-        <Footer />
-      </Col>
-    </Row>
+    <Routes>
+      {listUser.map((user) => {
+        return <Route path={user.uid} element={<ChatUI id={user.uid} />} key={user.uid} />;
+      })}
+    </Routes>
   );
 }
 

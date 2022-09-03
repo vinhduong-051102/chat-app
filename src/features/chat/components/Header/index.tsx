@@ -6,17 +6,23 @@ import styles from "./Header.module.scss";
 
 const cx = classNames.bind(styles);
 
-function Header() {
+interface propsTypes {
+  hostName: string;
+  photoURL: string;
+
+}
+
+const Header: React.FC<propsTypes> = ({hostName, photoURL}) => {
   return (
     <Row style={{ height: 65, borderBottom: "1px solid #ccc" }} align='middle'>
       <Col span={20}>
         <Row align='middle'>
           <Col style={{ margin: "0 12px" }}>
-            <Avatar src='https://picsum.photos/200/300' />
+            <Avatar src={photoURL} />
           </Col>
           <Col>
             <p style={{ fontWeight: 600, fontSize: 16, textAlign: "center", marginBottom: 0 }}>
-              Nguyen Chien
+              {hostName}
             </p>
           </Col>
         </Row>

@@ -1,12 +1,20 @@
 import { Button, Col, Row, Typography } from "antd";
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "~/features/auth/authSlice";
-import { auth } from "~/firebase/config";
+import { auth, db } from "~/firebase/config";
 
 const { Title } = Typography;
+
+interface message {
+  uid: string;
+  content: string;
+  createdAt: string;
+  roomID: string;
+}
 
 function Login() {
   const dispatch = useDispatch();
@@ -15,8 +23,17 @@ function Login() {
   const [signInWithGoogle, user, _loading, _error] = useSignInWithGoogle(auth);
   useEffect(() => {
     if (user) {
-      dispatch(login(user));
-      navigate("/");
+      const uid = user.user.uid;
+      getDoc(doc(db, "users", uid)).then((doc) => {
+        const data = doc.data();
+        const isLogin = data?.isLogin;
+        if (!isLogin) {
+          dispatch(login(user));
+          navigate("/chat-room");
+        } else {
+          alert("Tài khoản đã đăng nhập tại nơi khác");
+        }
+      });
     }
   }, [user, dispatch, navigate]);
   const handleLogin = () => {

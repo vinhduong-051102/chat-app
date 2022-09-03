@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import LoginReducer from "~/features/auth/authSlice";
+import authReducer from "~/features/auth/authSlice";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import rootReducer from "./rootReducer";
 import { rootSaga } from "./rootSaga";
+import chatReducer from "~/features/chat/chatSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [
@@ -13,7 +14,8 @@ const middleware = [
 
 const store = configureStore({
   reducer: {
-    LoginReducer,
+    authReducer,
+    chatReducer,
     rootReducer
   },
   middleware: (getDefaultMiddleware) => {
