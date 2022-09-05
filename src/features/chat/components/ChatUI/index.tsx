@@ -23,13 +23,15 @@ interface message {
 const ChatUI: React.FC<propsTypes> = ({ id }) => {
   const listUser = useSelector(selectListUser);
   const listMessage = useSelector(selectMessages);
+  console.log("🚀 ~ file: index.tsx ~ line 26 ~ listMessage", listMessage)
   const [roomID, setRoomID] = useState("");
   const userCredential = useSelector(selectUserCredential);
   const [chatValue, setChatValue] = useState("");
   const [messages, setMessages] = useState(() => {
-    const initialState: message[] = [];
+    const initialState: message[] = [...listMessage]
     return initialState;
   });
+
   const [currUserId, setCurrUserId] = useState("");
   const currUser = userCredential?.user;
   const userSelected = listUser.find((user) => user.uid === id);
@@ -41,12 +43,6 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
     hostName = userSelected?.displayName;
     userSelectedId = userSelected.uid;
   }
-  useEffect(() => {
-    if (roomID !== "") {
-      const messagesInThisChatRoom = listMessage.filter((message) => message.roomID === roomID);
-      setMessages(messagesInThisChatRoom);
-    }
-  }, [roomID, listMessage]);
   useEffect(() => {
     if (currUser) {
       setCurrUserId(currUser.uid);
@@ -114,6 +110,7 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
   useEffect(() => {
     const handleTypeEnter = (which: KeyboardEvent) => {
       if (which.key === "Enter") {
+        console.log("first")
         handleSubmit();
       }
     };
@@ -124,8 +121,8 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
   }, [handleSubmit]);
 
   useEffect(() => {
-    setMessages(messages);
-  }, [messages, roomID])
+    setMessages(listMessage);
+  }, [roomID, listMessage])
 
   return (
     <Row>
@@ -142,6 +139,7 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
           photoURL={photoURL}
           hostId={userSelectedId}
           messages={messages}
+          roomID={roomID}
         />
       </Col>
       <Col span={24} style={{ height: "50px" }}>

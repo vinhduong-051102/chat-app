@@ -14,18 +14,20 @@ interface propsTypes {
   hostId: string;
   photoURL: string;
   messages: message[];
+  roomID: string;
 }
 
 const cx = classNames.bind(styles);
 
 
-const ChatRoom: React.FC<propsTypes> = ({ hostName, photoURL, messages, hostId }) => {
-  for(let i = 0; i < messages.length - 1; i++) {
-    for(let j = i + 1; j < messages.length; j++) {
-      if(messages[j].createdAt < messages[i].createdAt) {
-        let temp: message = messages[i]
-        messages[i] = messages[j]
-        messages[j] = temp 
+const ChatRoom: React.FC<propsTypes> = ({ hostName, photoURL, messages, hostId, roomID }) => {
+  const messagesInThisRoom = messages.filter(message => message.roomID === roomID);
+  for(let i = 0; i < messagesInThisRoom.length - 1; i++) {
+    for(let j = i + 1; j < messagesInThisRoom.length; j++) {
+      if(messagesInThisRoom[j].createdAt < messagesInThisRoom[i].createdAt) {
+        let temp: message = messagesInThisRoom[i]
+        messagesInThisRoom[i] = messagesInThisRoom[j]
+        messagesInThisRoom[j] = temp 
       }
     }
   }
@@ -45,7 +47,7 @@ const ChatRoom: React.FC<propsTypes> = ({ hostName, photoURL, messages, hostId }
         </Row>
       </Col>
       {/* chat */}
-      {messages.map((message, index) => {
+      {messagesInThisRoom.map((message, index) => {
         const { content, uid } = message;
         return (
           <Col span={24} style={{ height: 50 }} key={index}>
