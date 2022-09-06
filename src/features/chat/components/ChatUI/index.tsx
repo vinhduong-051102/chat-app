@@ -114,9 +114,9 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
         handleSubmit();
       }
     };
-    window.addEventListener("keydown", handleTypeEnter);
+    window.addEventListener("keyup", handleTypeEnter);
     return () => {
-      window.removeEventListener("keydown", handleTypeEnter);
+      window.removeEventListener("keyup", handleTypeEnter);
     };
   }, [handleSubmit]);
 
