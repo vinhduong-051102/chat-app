@@ -10,9 +10,10 @@ interface propsTypes {
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onSubmit: React.MouseEventHandler<HTMLButtonElement>;
+  onLike: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const Footer: React.FC<propsTypes> = ({ onChange, value, onSubmit }) => {
+const Footer: React.FC<propsTypes> = ({ onChange, value, onSubmit, onLike }) => {
   return (
     <div style={{ height: "100%" }}>
       <Row>
@@ -28,12 +29,15 @@ const Footer: React.FC<propsTypes> = ({ onChange, value, onSubmit }) => {
           />
         </Col>
         <Col span={1} className={cx("button-wrapper")}>
-          <button onClick={onSubmit}>
-            <FontAwesomeIcon
-              icon={value.trim().length > 0 ? faPaperPlane : faThumbsUp}
-              className={cx("button-icon")}
-            />
-          </button>
+          {value.trim().length > 0 ? (
+            <button onClick={onSubmit}>
+              <FontAwesomeIcon icon={faPaperPlane} className={cx("button-icon")} />
+            </button>
+          ) : (
+            <button onClick={onLike}>
+              <FontAwesomeIcon icon={faThumbsUp} className={cx("button-icon")} />
+            </button>
+          )}
         </Col>
       </Row>
     </div>

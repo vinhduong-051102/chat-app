@@ -1,4 +1,4 @@
-import { faFaceSmile, faReply } from "@fortawesome/free-solid-svg-icons";
+import { faFaceSmile, faReply, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames/bind";
 import styles from "./ChatRoom.module.scss";
@@ -39,7 +39,9 @@ const ChatContent: React.FC<propsTypes> = ({ children, role = "user" }) => {
             <FontAwesomeIcon icon={faFaceSmile} />
           </button>
         </div>
-        <p>{children}</p>
+        {children === "&#128077;" ? <FontAwesomeIcon icon={faThumbsUp} style={{fontSize: 30, color: "#4456FA"}} /> : <p>{children}</p>}
+        
+        
       </div>
     </div>
   );

@@ -107,11 +107,23 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
     });
   }, [chatValue, currUserId, roomID]);
 
+  const handleLike = () => {
+    setDoc(doc(db, "messages", v4()), {
+      content: "&#128077;",
+      roomID: roomID,
+      uid: currUserId,
+      createdAt: Date.now(),
+    }).then(() => {
+      setChatValue("");
+    });
+  }
+
   useEffect(() => {
     const handleTypeEnter = (which: KeyboardEvent) => {
       if (which.key === "Enter") {
-        console.log("first")
-        handleSubmit();
+        if(chatValue) {
+          handleSubmit();
+        }
       }
     };
     window.addEventListener("keyup", handleTypeEnter);
@@ -143,7 +155,7 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
         />
       </Col>
       <Col span={24} style={{ height: "50px" }}>
-        <Footer onChange={handleInputChat} value={chatValue} onSubmit={handleSubmit} />
+        <Footer onChange={handleInputChat} value={chatValue} onSubmit={handleSubmit} onLike={handleLike} />
       </Col>
     </Row>
   );
