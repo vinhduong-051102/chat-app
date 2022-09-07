@@ -33,10 +33,10 @@ function SideBar() {
   };
 
   useEffect(() => {
-    getDocs(collection(db, "rooms")).then((data) => {
+    // getDocs(collection(db, "rooms")).then((data) => {
       
-    })
-  })
+    // })
+  }, [])
 
   return (
     <Row style={{ height: "100%", borderRight: "1px solid #ccc", paddingLeft: 14 }}>

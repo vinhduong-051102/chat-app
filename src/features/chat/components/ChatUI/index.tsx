@@ -1,6 +1,6 @@
-import { Col, Row } from "antd";
+import { Col, Row, RowProps } from "antd";
 import { ChatRoom, Header, Footer } from "../../components";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { selectListUser } from "~/app/rootReducer";
 import { useSelector } from "react-redux";
 import { setDoc, doc, getDocs, collection, query, where } from "firebase/firestore";
@@ -27,7 +27,7 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
   const userCredential = useSelector(selectUserCredential);
   const [chatValue, setChatValue] = useState("");
   const [messages, setMessages] = useState(() => {
-    const initialState: message[] = [...listMessage]
+    const initialState: message[] = [...listMessage];
     return initialState;
   });
 
@@ -42,6 +42,8 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
     hostName = userSelected?.displayName;
     userSelectedId = userSelected.uid;
   }
+  const chatRoomRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (currUser) {
       setCurrUserId(currUser.uid);
@@ -87,9 +89,6 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
         messages.push({ content, uid, roomID, createdAt });
       });
     });
-
-    window.scrollTo({top: 100})
-
   }, [currUserId, userSelectedId, roomID]);
   const handleInputChat: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setChatValue(e.target.value);
@@ -115,12 +114,12 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
     }).then(() => {
       setChatValue("");
     });
-  }
+  };
 
   useEffect(() => {
     const handleTypeEnter = (which: KeyboardEvent) => {
       if (which.key === "Enter") {
-        if(chatValue) {
+        if (chatValue) {
           handleSubmit();
         }
       }
@@ -133,8 +132,13 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
 
   useEffect(() => {
     setMessages(listMessage);
-  }, [roomID, listMessage])
+  }, [roomID, listMessage]);
 
+  useEffect(() => {
+    if (chatRoomRef?.current) {
+      chatRoomRef.current.scrollTop = chatRoomRef.current.scrollHeight + 50;
+    }
+  }, [messages, roomID]);
   return (
     <Row>
       <Col span={24} style={{ height: "65px" }}>
@@ -144,6 +148,7 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
         span={24}
         className='chatRoom'
         style={{ height: "calc(100vh - 65px - 50px)", overflowY: "scroll", overflowX: "hidden" }}
+        ref={chatRoomRef}
       >
         <ChatRoom
           hostName={hostName}
@@ -154,7 +159,12 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
         />
       </Col>
       <Col span={24} style={{ height: "50px" }}>
-        <Footer onChange={handleInputChat} value={chatValue} onSubmit={handleSubmit} onLike={handleLike} />
+        <Footer
+          onChange={handleInputChat}
+          value={chatValue}
+          onSubmit={handleSubmit}
+          onLike={handleLike}
+        />
       </Col>
     </Row>
   );
