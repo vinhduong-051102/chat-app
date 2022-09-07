@@ -23,7 +23,6 @@ interface message {
 const ChatUI: React.FC<propsTypes> = ({ id }) => {
   const listUser = useSelector(selectListUser);
   const listMessage = useSelector(selectMessages);
-  console.log("🚀 ~ file: index.tsx ~ line 26 ~ listMessage", listMessage)
   const [roomID, setRoomID] = useState("");
   const userCredential = useSelector(selectUserCredential);
   const [chatValue, setChatValue] = useState("");
@@ -130,7 +129,7 @@ const ChatUI: React.FC<propsTypes> = ({ id }) => {
     return () => {
       window.removeEventListener("keyup", handleTypeEnter);
     };
-  }, [handleSubmit]);
+  }, [handleSubmit, chatValue]);
 
   useEffect(() => {
     setMessages(listMessage);

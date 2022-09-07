@@ -10,6 +10,9 @@ import { logout } from "~/features/auth/authSlice";
 import { ListUserChat, ListUserOnline } from "./components";
 import styles from "./SideBar.module.scss";
 import { selectUserCredential } from "~/features/auth/authSlice";
+import { getDocs, collection } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "~/firebase/config";
 
 const cx = classNames.bind(styles);
 
@@ -28,6 +31,13 @@ function SideBar() {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  useEffect(() => {
+    getDocs(collection(db, "rooms")).then((data) => {
+      
+    })
+  })
+
   return (
     <Row style={{ height: "100%", borderRight: "1px solid #ccc", paddingLeft: 14 }}>
       <Col span={24} style={{ height: "13%", padding: "0 14px 18px 14px" }}>

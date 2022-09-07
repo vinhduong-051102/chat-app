@@ -8,15 +8,16 @@ import { useState } from "react";
 
 const cx = classNames.bind(styles);
 
-interface userChat {
-  url: string;
-  name: string;
+interface roomChat {
+  roomID: string;
+  photoURL: string;
+  displayName: string;
   latestMessage: string;
   isOnline: boolean;
 }
 
 interface propsTypes {
-  data: Array<userChat>;
+  data: Array<roomChat>;
 }
 
 const ListUserChat: React.FC<propsTypes> = ({ data }) => {
@@ -24,18 +25,7 @@ const ListUserChat: React.FC<propsTypes> = ({ data }) => {
   const handleSelectChatRoom = (index: number) => {
     setIsActive(index);
   };
-  data = [
-    {
-      url: "https://picsum.photos/200/300",
-      name: "Picsum",
-      latestMessage: "Học tiewps đã tí bàn sau",
-      isOnline: true,
-    },
-    { url: "https://picsum.photos/200/300", name: "Picsum", latestMessage: "2", isOnline: true },
-    { url: "https://picsum.photos/200/300", name: "Picsum", latestMessage: "2", isOnline: true },
-    { url: "https://picsum.photos/200/300", name: "Picsum", latestMessage: "3", isOnline: true },
-    { url: "https://picsum.photos/200/300", name: "Picsum", latestMessage: "3", isOnline: true },
-  ];
+  
   return (
     <div style={{ width: "100%" }} className={cx("wrapper")}>
       <Row>
@@ -61,12 +51,12 @@ const ListUserChat: React.FC<propsTypes> = ({ data }) => {
                   <Space size='middle'>
                     <Col span={24}>
                       <div className={cx("avatar-wrapper")}>
-                        <Avatar size={50} src={item.url} style={{ marginBottom: 5 }} />
+                        <Avatar size={50} src={item.photoURL} style={{ marginBottom: 5 }} />
                         {item.isOnline && <span className={cx("online-checker")}></span>}
                       </div>
                     </Col>
                     <Col span={24}>
-                      <div className={cx("user-name")}>{item.name}</div>
+                      <div className={cx("user-name")}>{item.displayName}</div>
                       <div className={cx("latest-message")}>
                         {dotdotdot(item.latestMessage, 14)} 12:09
                       </div>
