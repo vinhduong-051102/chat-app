@@ -9,13 +9,18 @@ const cx = classNames.bind(styles);
 interface userTypes {
   displayName: string;
   isLogin: boolean;
-  loginAt: number;
   photoURL: string;
   uid: string;
 }
 
 interface propsTypes {
-  data: Array<userTypes>;
+  data: {
+    displayName: string;
+    isLogin: boolean;
+    photoURL: string;
+    uid: string;
+    roomID: string;
+  }[];
 }
 
 const ListUserOnline: React.FC<propsTypes> = ({ data }) => {
@@ -25,7 +30,7 @@ const ListUserOnline: React.FC<propsTypes> = ({ data }) => {
         {data.map((item) => {
           return (
             <Col key={item.uid} style={{ maxWidth: 50}}>
-              <Link to={`/chat-room/${item.uid}`}>
+              <Link to={`/chat-room/${item.roomID}`}>
                 <div className={cx("avatar-wrapper")}>
                   <Avatar size={50} src={item.photoURL} style={{ marginBottom: 5 }} alt="avatar" />
                   {item.isLogin && <span className={cx("online-checker")}></span>}

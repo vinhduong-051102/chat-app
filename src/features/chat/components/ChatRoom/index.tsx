@@ -50,7 +50,7 @@ const ChatRoom: React.FC<propsTypes> = ({ hostName, photoURL, messages, hostId, 
       {messagesInThisRoom.map((message, index) => {
         const { content, uid } = message;
         return (
-          <Col span={24} style={{ height: 50 }} key={index}>
+          <Col span={24} style={{ minHeight: 50 }} key={index}>
             <ChatContent role={uid !== hostId ? "user" : "client"}>{content}</ChatContent>
           </Col>
         );

@@ -6,6 +6,7 @@ import rootReducer from "./rootReducer";
 import { rootSaga } from "./rootSaga";
 import chatReducer from "~/features/chat/chatSlice";
 
+
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [
   ...getDefaultMiddleware({ thunk: false, serializableCheck: false }),
@@ -16,7 +17,7 @@ const store = configureStore({
   reducer: {
     authReducer,
     chatReducer,
-    rootReducer
+    rootReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return middleware;

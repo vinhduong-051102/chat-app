@@ -15,7 +15,11 @@ const ChatContent: React.FC<propsTypes> = ({ children, role = "user" }) => {
     return (
       <div className={cx("content-wrapper")}>
         <div id={cx(role)} className={cx("content")}>
+        {children === "&#128077;" ? (
+          <FontAwesomeIcon icon={faThumbsUp} style={{ fontSize: 30, color: "#4456FA" }} />
+        ) : (
           <p>{children}</p>
+        )}
           <div className={cx("icon-group")}>
             <button className={cx("chat-icon")}>
               <FontAwesomeIcon icon={faFaceSmile} />
@@ -39,9 +43,11 @@ const ChatContent: React.FC<propsTypes> = ({ children, role = "user" }) => {
             <FontAwesomeIcon icon={faFaceSmile} />
           </button>
         </div>
-        {children === "&#128077;" ? <FontAwesomeIcon icon={faThumbsUp} style={{fontSize: 30, color: "#4456FA"}} /> : <p>{children}</p>}
-        
-        
+        {children === "&#128077;" ? (
+          <FontAwesomeIcon icon={faThumbsUp} style={{ fontSize: 30, color: "#4456FA" }} />
+        ) : (
+          <p>{children}</p>
+        )}
       </div>
     </div>
   );

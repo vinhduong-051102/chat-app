@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, getDocs, QuerySnapshot, setDoc } from "firebase/firestore";
+import { collection, doc, DocumentData, getDocs, QuerySnapshot, setDoc, query } from "firebase/firestore";
 import { select, takeLatest, call, put } from "redux-saga/effects";
 import { selectUserCredential } from "~/features/auth/authSlice";
 import { auth, db } from "~/firebase/config";
@@ -33,6 +33,7 @@ function fetchMessages() {
   return getDocs(collection(db, "messages"))
 }
 
+
 function* handleLogin(): any {
   const user = yield select(selectUserCredential);
   const userInfo = user.user;
@@ -63,6 +64,7 @@ function* handleLogin(): any {
       );
     }
   });
+  // get message
   const data: QuerySnapshot<DocumentData> = yield call(fetchMessages)
   const messagesDocs = data.docs
   const messages: message[] = []
@@ -71,6 +73,7 @@ function* handleLogin(): any {
     messages.push({ uid, content, roomID, createdAt })
   })
   yield put(getMessages(messages))
+
 }
 
 export function* rootSaga() {
