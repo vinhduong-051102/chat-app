@@ -8,6 +8,7 @@ interface propsTypes {
 }
 
 const MainLayout: React.FC<propsTypes> = ({ children }) => {
+  ("first")
   return (
     <div className={cx("main-layout-container")}>
       <div className={cx("sidebar")}>

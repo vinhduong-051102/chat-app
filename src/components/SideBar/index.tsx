@@ -4,13 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row, Tooltip } from "antd";
 import Input from "antd/lib/input/Input";
 import classNames from "classnames/bind";
-import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectListUser, selectListUserOnline } from "~/app/rootReducer";
 import { logout, selectUserCredential } from "~/features/auth/authSlice";
-import { selectMessages } from "~/features/chat/chatSlice";
-import { db } from "~/firebase/config";
+import { selectMessages, selectRooms } from "~/features/chat/chatSlice";
 import { ListUserChat, ListUserOnline } from "./components";
 import styles from "./SideBar.module.scss";
 
@@ -26,7 +24,6 @@ interface roomChat {
   uid: string;
 }
 
-
 const text = <span>Đăng xuất</span>;
 
 function SideBar() {
@@ -38,12 +35,19 @@ function SideBar() {
       uid: string;
       photoURL: string;
       isLogin: boolean;
-    }[] = []
-    return initialState
-  })
+    }[] = [];
+    return initialState;
+  });
+  const [listUserChat, setListUserChat] = useState(() => {
+    const initialState: { id: string; data: string[] }[] = [];
+    return initialState;
+  });
   const listUserOnline = useSelector(selectListUserOnline);
+  const listRoom = useSelector(selectRooms);
+  
   const userCredential = useSelector(selectUserCredential);
   const messages = useSelector(selectMessages);
+  
   const [listRoomChat, setListRoomChat] = useState(() => {
     const initialState: roomChat[] = [];
     return initialState;
@@ -53,67 +57,83 @@ function SideBar() {
   if (userInfo) {
     userId = userInfo.uid;
   }
-  const otherUserOnline = listUserOnline.filter((user) => user.uid !== userId);
-
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
   };
 
   useEffect(() => {
-    getDocs(collection(db, "rooms")).then((data) => {
-      const { docs } = data;
-      const listRoomChat: { id: string; data: string[] }[] = [];
-      const listRoomOnline: {
-        roomID: string;
-        displayName: string;
-        uid: string;
-        photoURL: string;
-        isLogin: boolean;
-      }[] = [];
-      const listInfoUserChat: roomChat[] = [];
-      docs.forEach((doc) => {
-        const users: string[] = doc.data().users;
-        const { id } = doc;
-        if (users.includes(userId)) {
-          listRoomChat.push({ id, data: users });
+    const listInfoUserChat: roomChat[] = [];
+    listUserChat.forEach((room) => {
+      const _data = messages.filter((message) => message.roomID === room.id);
+      
+      if (_data.length > 0) {
+        const arr = [..._data].sort((a, b) => a.createdAt - b.createdAt);
+        const { uid, content, roomID, createdAt } = arr[arr.length - 1];
+        const otherUserId = room.data.find((uid) => uid !== userId);
+        const otherUser = listUser.find((user) => user.uid === otherUserId);
+        if (otherUser) {
+          const { photoURL, displayName, isLogin } = otherUser;
+          listInfoUserChat.push({
+            isLogin,
+            displayName,
+            photoURL,
+            uid,
+            roomID,
+            createdAt,
+            latestMessage: content,
+          });
         }
-        const isRoomOnline = otherUserOnline.some((user) => users.includes(user.uid));
-        if (isRoomOnline) {
-          const otherUserId = users.find((uid) => uid !== userId);
-          const otherUser = listUser.find((user) => user.uid === otherUserId);
-          if (otherUser) {
-            const { isLogin, uid, photoURL, displayName } = otherUser;
-            listRoomOnline.push({ isLogin, uid, photoURL, displayName, roomID: id });
-          }
-        }
-      });
-      setListRoomOnline(listRoomOnline)
-      listRoomChat.forEach((room) => {
-        const _data = messages.filter((message) => message.roomID === room.id);
-        if (_data.length > 0) {
-          const arr = [..._data].sort((a, b) => a.createdAt - b.createdAt);
-          const { uid, content, roomID, createdAt } = arr[arr.length - 1];
-          const otherUserId = room.data.find((uid) => uid !== userId);
-          const otherUser = listUser.find((user) => user.uid === otherUserId);
-          if (otherUser) {
-            const { photoURL, displayName, isLogin } = otherUser;
-            listInfoUserChat.push({
-              isLogin,
-              displayName,
-              photoURL,
-              uid,
-              roomID,
-              createdAt,
-              latestMessage: content,
-            });
-          }
-        }
-      });
-      listInfoUserChat.sort((a, b) => b.createdAt - a.createdAt);
-      setListRoomChat(listInfoUserChat);
+      }
     });
-  }, [userId, messages, listUser, otherUserOnline]);
+    
+    listInfoUserChat.sort((a, b) => b.createdAt - a.createdAt);
+    // console.log(listInfoUserChat)
+    setListRoomChat(listInfoUserChat);
+  }, [listUser, listUserChat, messages, userId]);
+
+
+  useEffect(() => {
+    const RoomsOnline: {
+      roomID: string;
+      displayName: string;
+      uid: string;
+      photoURL: string;
+      isLogin: boolean;
+    }[] = [];
+
+    listRoom.forEach((room, index) => {
+      const users: string[] = room.users;
+      const id = room.roomID;
+      const otherUserOnline = listUserOnline.filter((user) => user.uid !== userId);
+      const isRoomOnline = otherUserOnline.some((user) => {
+        return users.includes(user.uid)
+      });
+      if (isRoomOnline && users.includes(userId)) {
+        const otherUserId = users.find((uid) => uid !== userId);
+        const otherUser = listUser.find((user) => user.uid === otherUserId);
+        if (otherUser) {
+          const { isLogin, uid, photoURL, displayName } = otherUser;
+          RoomsOnline.push({ isLogin, uid, photoURL, displayName, roomID: id });
+        
+        }
+      }
+    });
+    setListRoomOnline(RoomsOnline);
+  }, [listRoom, listUser, userId, listUserOnline]);
+
+  
+  useEffect(() => {
+    const listRoomChat: { id: string; data: string[] }[] = [];
+    listRoom.forEach((room) => {
+      const users: string[] = room.users;
+      const id = room.roomID;
+      if (users.includes(userId)) {
+        listRoomChat.push({ id, data: users });
+      }
+      setListUserChat(listRoomChat);
+    });
+  }, [listRoom, userId]);
 
   return (
     <Row style={{ height: "100%", borderRight: "1px solid #ccc", paddingLeft: 14 }}>

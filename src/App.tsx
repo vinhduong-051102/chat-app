@@ -8,7 +8,7 @@ import { db } from "~/firebase/config";
 import { MainLayout } from "~/layouts";
 import { privateRoute, publicRoute } from "~/routes";
 import { setListUser } from "./app/rootReducer";
-import { getMessages } from "./features/chat/chatSlice";
+import { getMessages, getRooms } from "./features/chat/chatSlice";
 interface userTypes {
   displayName: string;
   isLogin: boolean;
@@ -22,6 +22,11 @@ interface messageTypes {
   content: string;
   roomID: string;
   createdAt: number;
+}
+
+interface roomType {
+  roomID: string;
+  users: string[];
 }
 
 function App() {
@@ -38,6 +43,7 @@ function App() {
         });
         dispatch(setListUser(listUser));
       });
+
       onSnapshot(collection(db, "messages"), (data) => {
         const { docs } = data;
         const messages: messageTypes[] = [];
@@ -46,6 +52,16 @@ function App() {
           messages.push({ createdAt, content, roomID, uid });
         });
         dispatch(getMessages(messages));
+      });
+
+      onSnapshot(collection(db, "rooms"), (data) => {
+        const { docs } = data;
+        const rooms: roomType[] = [];
+        docs.forEach((doc) => {
+          const { users } = doc.data();
+          rooms.push({ users, roomID: doc.id });
+        });
+        dispatch(getRooms(rooms));
       });
     }
   }, [_isLogin, dispatch]);

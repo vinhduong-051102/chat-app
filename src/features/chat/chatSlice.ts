@@ -10,12 +10,19 @@ interface message {
   createdAt: number;
 }
 
-interface initialStateStyles {
-  messages: message[] | [];
+interface room {
+  roomID: string;
+  users: string[]
 }
 
-const initialState: initialStateStyles = {
+interface initialStateTypes {
+  messages: message[];
+  rooms: room[];
+}
+
+const initialState: initialStateTypes = {
   messages: [],
+  rooms: []
 };
 
 const chatSlice = createSlice({
@@ -23,11 +30,16 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     getMessages: (state, action) => {
+      
       state.messages = [...action.payload];
     },
+    getRooms: (state, action) => {
+      state.rooms = [...action.payload]
+    }
   },
 });
 
 export const selectMessages = (state: RootState) => state.chatReducer.messages;
-export const { getMessages } = chatSlice.actions;
+export const selectRooms = (state: RootState) => state.chatReducer.rooms;
+export const { getMessages, getRooms } = chatSlice.actions;
 export default chatSlice.reducer;

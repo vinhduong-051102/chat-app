@@ -1,11 +1,10 @@
-import { Routes, Route } from "react-router-dom";
-import { selectListUser } from "~/app/rootReducer";
-import { selectUserCredential } from "~/features/auth/authSlice";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { ChatUI } from "./components";
-import { useState, useEffect } from "react";
-import { getDocs, collection } from "firebase/firestore";
+import { Route, Routes } from "react-router-dom";
+import { selectUserCredential } from "~/features/auth/authSlice";
 import { db } from "~/firebase/config";
+import { ChatUI } from "./components";
 
 interface initialStateTypes {
   id: string;
@@ -36,7 +35,6 @@ function Chat() {
   return (
     <Routes>
       {listRoom.map((room) => {
-        console.log(room.id);
         return <Route path={room.id} element={<ChatUI id={room.selectedUserId} />} key={room.id} />;
       })}
     </Routes>
